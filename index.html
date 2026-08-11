@@ -1,5 +1,72 @@
 <!DOCTYPE html>
 <html lang="id">
+  <head>
+
+  <!-- kode lain website kamu -->
+
+  <style>
+    .install-banner {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 20px;
+      z-index: 99999;
+
+      display: none;
+      align-items: center;
+      gap: 14px;
+
+      padding: 16px 18px;
+      background: linear-gradient(90deg, #8b20ff, #bd16ff, #f000e5);
+      border-radius: 22px;
+      color: white;
+
+      box-shadow: 0 10px 30px rgba(123, 0, 255, 0.25);
+    }
+
+    .install-icon {
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.18);
+      border-radius: 14px;
+      font-size: 32px;
+    }
+
+    .install-info {
+      flex: 1;
+    }
+
+    .install-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .install-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .install-btn {
+      border: none;
+      padding: 11px 20px;
+      border-radius: 14px;
+      background: white;
+      color: #9b18e8;
+      font-weight: 700;
+    }
+
+    .install-close {
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 28px;
+    }
+  </style>
+
+  </head>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -42,5 +109,66 @@ footer{text-align:center;color:#756e65;font-size:12px;margin-top:28px;line-heigh
 </section>
 <footer>TOPIK I Vocabulary Master · Bundle Volume 1–4<br>Belajar bersama Tsuha 🇰🇷</footer>
 </main>
+  <!-- PWA INSTALL BANNER -->
+<div id="installBanner" class="install-banner">
+  <div class="install-icon">
+    ↓
+  </div>
+
+  <div class="install-info">
+    <div class="install-title">Download App</div>
+    <div class="install-desc">Akses lebih cepat dari Home Screen</div>
+  </div>
+
+  <button id="installBtn" class="install-btn">
+    Install
+  </button>
+
+  <button id="closeInstall" class="install-close">
+    ×
+  </button>
+</div>
+  <script>
+let deferredPrompt;
+
+const installBanner = document.getElementById("installBanner");
+const installBtn = document.getElementById("installBtn");
+const closeInstall = document.getElementById("closeInstall");
+
+// Saat browser mendeteksi web bisa di-install
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+
+  deferredPrompt = event;
+
+  // Tampilkan banner
+  installBanner.style.display = "flex";
+});
+
+// Saat tombol Install ditekan
+installBtn.addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+
+  const { outcome } = await deferredPrompt.userChoice;
+
+  deferredPrompt = null;
+  installBanner.style.display = "none";
+
+  console.log("Install:", outcome);
+});
+
+// Tombol X
+closeInstall.addEventListener("click", () => {
+  installBanner.style.display = "none";
+});
+
+// Setelah aplikasi berhasil di-install
+window.addEventListener("appinstalled", () => {
+  installBanner.style.display = "none";
+  deferredPrompt = null;
+});
+  </script>
 </body>
 </html>
